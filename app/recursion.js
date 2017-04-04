@@ -35,44 +35,37 @@ exports.recursionAnswers = {
 
 	permute: function (arr) {
 		let retval = [];
-		let topIndex = 3;
-		let workingA = Array.from(arr);
 
-		function swapEm(a,y,z){
+		function swapEnds(a) {
 			let _r = Array.from(a);
-			let _z = a[z];
-			_r[z] = a[y];
-			_r[y] = _z;
+			let _m = _r[_r.length-1];
+			_r[_r.length-1] = _r[_r.length-2];
+			_r[_r.length-2] = _m;
 			return _r;
 		}
 
-		function doubleSwapEm(a){
-			let ti = topIndex;
-			let bounce = 1;
-			retval.push(swapEm(a,ti,ti-bounce));
-			ti--;
-			a = swapEm(a,ti,ti-bounce);
+		function rotate(a){
+			let _r = Array.from(a);
+			let _m = _r.shift();
+			_r.push(_m);
+			return _r;
+		}
+
+		function getScrambled(a, rotSize){
 			retval.push(a);
+			retval.push(swapEnds(a));
+			let _rot = rotSize+2;
 
-			return a;
+			if (_rot <= a.length){
+				let _subFront = a.slice(0, a.length - _rot);
+				let _subEnd = a.slice(a.length - _rot, a.length);
+				_subEnd = rotate(_subEnd);
+				a = _subFront.concat(_subEnd);
+				getScrambled(a, rotSize+1);
+			}
 		}
 
-		function rotateEm(a){
-			let _r = Array.from(a);
-			_r.push(_r.shift());
-			return _r;
-		}
-
-		for (let i=0;i<workingA.length;i++){
-			workingA = Array.from(doubleSwapEm(workingA));
-			workingA = Array.from(doubleSwapEm(workingA));
-			let tmp = workingA.shift();
-			workingA = Array.from(workingA.reverse());
-			workingA.unshift(tmp);
-			retval.push(Array.from(workingA));
-			retval.push(Array.from(swapEm(workingA,3,2)));
-			workingA = arr = rotateEm(Array.from(arr));
-		}
+		getScrambled(arr, 1);
 
 		return retval;
 	},
