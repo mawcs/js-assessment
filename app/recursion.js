@@ -78,17 +78,14 @@ exports.recursionAnswers = {
 	},
 
 	fibonacci: function (n) {
-		let retval = [];
-		let oldFib = 1
-				, fib = 1;
-		retval.push(oldFib);
-		for (let i=1;i<n;i++){
-			retval.push(fib);
-			let newFib = fib + oldFib;
-			oldFib = fib;
-			fib = newFib;
+
+		function fib(nth, currFib=1, oldFib=0){
+			if (nth === 0) return oldFib;
+			if (nth === 1) return currFib;
+			return fib(nth-1, currFib+oldFib, currFib);
 		}
-		return retval[n-1];
+
+		return fib(n);
 	},
 
 	validParentheses: function (n) {
