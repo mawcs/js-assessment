@@ -34,40 +34,31 @@ exports.recursionAnswers = {
 	},
 
 	permute: function (arr) {
-		let retval = [];
+		let result = [];
+		let working = [];
 
-		function swapEnds(a) {
-			let _r = Array.from(a);
-			let _m = _r[_r.length-1];
-			_r[_r.length-1] = _r[_r.length-2];
-			_r[_r.length-2] = _m;
-			return _r;
-		}
+		function doPerm() {
+			let val = {};
+			let l = arr.length;
 
-		function rotate(a){
-			let _r = Array.from(a);
-			let _m = _r.shift();
-			_r.push(_m);
-			return _r;
-		}
+			for (let i=0; i<l; i++) {
+				val = arr.splice(i, 1)[0];
+				working.push(val);
 
-		function getScrambled(a, rotSize){
-			retval.push(a);
-			retval.push(swapEnds(a));
-			let _rot = rotSize+2;
+				if (arr.length > 0) {
+					doPerm();
+				} else {
+					result.push(Array.from(working));
+				}
 
-			if (_rot <= a.length){
-				let _subFront = a.slice(0, a.length - _rot);
-				let _subEnd = a.slice(a.length - _rot, a.length);
-				_subEnd = rotate(_subEnd);
-				a = _subFront.concat(_subEnd);
-				getScrambled(a, rotSize+1);
+				arr.splice(i, 0, val);
+				working.pop();
 			}
+
+			return result;
 		}
 
-		getScrambled(arr, 1);
-
-		return retval;
+		return doPerm();
 	},
 
 	fibonacci: function (n) {
