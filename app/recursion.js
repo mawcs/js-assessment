@@ -73,6 +73,23 @@ exports.recursionAnswers = {
 	},
 
 	validParentheses: function (n) {
+		function parenSet(n) {
+			if (n === 0)
+				return [""];
 
+			let retval = [];
+			for (let i = 0; i < n; ++i) {
+				let leftPs = parenSet(i);
+				let rightPs = parenSet(n - i - 1);
+
+				for (let l = 0; l < leftPs.length; ++l) {
+					for (let r = 0; r < rightPs.length; ++r) {
+						retval.push("(" + leftPs[l] + ")" + rightPs[r]);
+					}
+				}
+			}
+			return retval;
+		}
+		return parenSet(n);
 	}
 };
